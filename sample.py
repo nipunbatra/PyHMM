@@ -32,8 +32,8 @@ def sample_dhmm(initial_probability,transition_probability,observation_matrix,nu
 
 def sample_multinomial(observed_state_sequence, observation_matrix):
     #print observed_state_sequence,observed_state_sequence.shape
-    print observed_state_sequence,observation_matrix
-    Y=np.zeros(shape=np.size(observed_state_sequence))
+    #print observed_state_sequence,observation_matrix
+    Y=np.zeros(shape=np.size(observed_state_sequence),dtype=np.int)
     #print Y.size,len(Y)
     flat_observation_matrix=observed_state_sequence.flatten(1)
     #print flat_observation_matrix
@@ -46,7 +46,21 @@ def sample_multinomial(observed_state_sequence, observation_matrix):
         Y[index] = sample_discrete(observation_matrix[i,:], len(index), 1)
         Z=Y.reshape(observed_state_sequence.shape)
     return Z
-        
+
+def apply_observation_map(x):
+    if x==0:
+        return "Walk"
+    elif x==1:
+        return "Shop"
+    else:
+        return "Clean"
+    
+def apply_hidden_map(x):
+    if x==0:
+        return "Rainy"
+    else:
+        return "Sunny"
+         
 
 
 '''Test function
@@ -67,13 +81,16 @@ emission_probability = {
 '''
     
     
-start_probability=np.array([.9,.1])
-transition_probability=np.array([[.5,.5],[.5,.5]])
-emission_probability=np.array([[.9,.1,.0],[.3,.6,.1]])
+start_probability=np.array([.6,.4])
+transition_probability=np.array([[.7,.3],[.4,.6]])
+emission_probability=np.array([[.1,.4,.5],[.6,.3,.1]])
 
-sample_discrete(start_probability, 3,10)
+sample_discrete(start_probability, 1,100)
 
-print sample_dhmm(start_probability,transition_probability,emission_probability,3,5)
+[hidden,observed]=sample_dhmm(start_probability,transition_probability,emission_probability,1,100)
+hidden_names=np.vectorize(apply_hidden_map)(hidden)
+observed_names=np.vectorize(apply_observation_map)(observed)
 
+print "Rainy: ",np.sum(hidden_names=='Rainy')
 
                                  

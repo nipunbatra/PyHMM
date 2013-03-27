@@ -1,3 +1,9 @@
+'''Forward algorithm
+It solves the first portion of the first problem as per Rabiner's classic paper on HMM
+It tries to compute Probability(Observation Sequence| Lambda=(Pi,A,B))
+'''
+
+
 def forward(prior,transition_matrix,emission_matrix,observation_vector,scaling=True):
     number_of_hidden_states=len(prior)
     number_of_observations=len(observation_vector)

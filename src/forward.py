@@ -3,16 +3,16 @@ It solves the first portion of the first problem as per Rabiner's classic paper 
 It tries to compute Probability(Observation Sequence| Lambda=(Pi,A,B))
 '''
 
+import numpy as np
+from underflow_normalize import normalize
+
 
 def forward(prior,transition_matrix,emission_matrix,observation_vector,scaling=True):
     number_of_hidden_states=len(prior)
     number_of_observations=len(observation_vector)
-    shape_delta=(number_of_hidden_states,number_of_observations)
-    shape_psi=shape_delta
-    alpha=np.zeros(shape_delta)
-    psi=np.zeros(shape_psi,dtype=np.int)
+    shape_alpha=(number_of_hidden_states,number_of_observations)
+    alpha=np.zeros(shape_alpha)
     scale=np.ones(number_of_observations)
-    optimum_path=np.zeros(number_of_observations,dtype=np.int)
     
     
     '''1.Initialization'''
@@ -20,7 +20,7 @@ def forward(prior,transition_matrix,emission_matrix,observation_vector,scaling=T
     first_observation=observation_vector[t]
     alpha[:,t]=prior*emission_matrix[first_observation:,t]
     if scaling:
-        [delta[:,0], n] = normalize(delta[:,0])
+        [alpha[:,0], n] = normalize(alpha[:,0])
         scale[0] = 1/n;
     
     '''2.Induction'''

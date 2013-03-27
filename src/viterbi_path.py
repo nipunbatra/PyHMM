@@ -2,7 +2,7 @@ import numpy as np
 from underflow_normalize import normalize
 
 def path(prior,transition_matrix,emission_matrix,observation_vector,scaling=True):
-    number_of_hidden_states=len(start_probability)
+    number_of_hidden_states=len(prior)
     number_of_observations=len(observation_vector)
     shape_delta=(number_of_hidden_states,number_of_observations)
     shape_psi=shape_delta

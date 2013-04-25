@@ -16,7 +16,7 @@ def sample_discrete(prob,rows=1,columns=1):
        
         
         return M
-def sample_mc(initial_probability,tranistion_probability,sequence_length,number_of_sequences=1):
+def sample_mc(initial_probability,transition_probability,sequence_length,number_of_sequences=1):
     S=np.zeros((number_of_sequences,sequence_length),dtype=np.int)
     for i in range(number_of_sequences):
         S[i][0] = sample_discrete(initial_probability)
@@ -80,6 +80,7 @@ emission_probability = {
    
 '''
     
+'''
     
 start_probability=np.array([.6,.4])
 transition_probability=np.array([[.7,.3],[.4,.6]])
@@ -93,4 +94,4 @@ observed_names=np.vectorize(apply_observation_map)(observed)
 
 print "Rainy: ",np.sum(hidden_names=='Rainy')
 
-                                 
+'''                              

@@ -1,7 +1,8 @@
 
+import numpy as np
 
 def evaluate_pdf_cond_multinomial(data, obsmat):
-    (Q,O) = np.size(obsmat)
+    (Q,O) = np.shape(obsmat)
     T = len(data)
     B = np.zeros((Q,T))
 

@@ -20,20 +20,15 @@ def backward(prior,transition_matrix,emission_matrix,observation_vector,scaling=
     
     '''2.Induction'''
     '''Currently Non-vectorized'''
-    for t in range(1,number_of_observations):
+    for t in range(number_of_observations-1,1,-1):
         for i in range(0,number_of_hidden_states):
             beta_sum=0            
             for j in range(0,number_of_hidden_states):
                 beta_sum+=beta[i][t-1]+transition_matrix[i][j]                
-            beta[j][t]=beta_sum*emission_matrix[j][observation_vector[t]]
+            beta[i][t]=beta_sum*emission_matrix[j][observation_vector[t]]
         if scaling:
             [beta[:,t], n] = normalize(beta[:,t]);
             scale[t] = 1/n;
     
-    '''3.Termination'''
-    if scaling:
-        loglik=sum(np.log(scale))
-    else:
-        loglik=np.log(sum(beta[:,number_of_observations]))
-    return beta,loglik
+   
    

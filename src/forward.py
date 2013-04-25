@@ -13,6 +13,7 @@ def forward(prior,transition_matrix,emission_matrix,observation_vector,scaling=T
     shape_alpha=(number_of_hidden_states,number_of_observations)
     alpha=np.zeros(shape_alpha)
     scale=np.ones(number_of_observations)
+    xi_summed = np.zeros((number_of_hidden_states,number_of_hidden_states))
     
     
     '''1.Initialization'''
@@ -32,8 +33,9 @@ def forward(prior,transition_matrix,emission_matrix,observation_vector,scaling=T
                 prob_sum+=alpha[i][t-1]+transition_matrix[i][j]                
             alpha[j][t]=prob_sum*emission_matrix[j][observation_vector[t]]
         if scaling:
-            [alpha[:,t], n] = normalize(alpha[:,t]);
-            scale[t] = 1/n;
+            [alpha[:,t], n] = normalize(alpha[:,t])
+            scale[t] = 1/n
+        xi_summed = xi_summed + normalise(np.dot(alpha[:,t-1] ,emission_matrix[:,t].H) * transition_matrix)
     
     '''3.Termination'''
     if scaling:

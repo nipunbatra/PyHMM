@@ -5,7 +5,7 @@ def em_converged(loglik, previous_loglik, threshold, check_increased):
     decrease = False
 
     if check_increased:
-      if loglik - previous_loglik < -.001:
+      if loglik - previous_loglik < -.0001:
           decrease = False
           converged = False
 
@@ -15,4 +15,4 @@ def em_converged(loglik, previous_loglik, threshold, check_increased):
     avg_loglik = (abs(loglik) + abs(previous_loglik) + np.spacing(1))/2
     if (delta_loglik / avg_loglik) < threshold:
         converged =True
-        return True
+    return converged

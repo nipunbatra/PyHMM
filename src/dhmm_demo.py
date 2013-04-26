@@ -7,16 +7,19 @@ Q = 2
 
 #"true" parameters
 prior0 = normalize(np.random.rand(Q,1))[0]
+prior0 =np.array([.5,.5])
 print "Prior:",prior0
 transmat0 = mk_stochastic(np.random.rand(Q,Q))
+transmat0=np.array([[.3 ,.7],[.7,.3]])
 print "Transition:",transmat0
 obsmat0 = mk_stochastic(np.random.rand(Q,O))
+obsmat0=np.array([[.333,.333,.333],[.333,.333,.333]])
 print "Observation",obsmat0
 
 
 # training data
 T = 5
-nex = 10
+nex = 100
 [obs,hidden] = sample_dhmm(prior0, transmat0, obsmat0, T, nex)
 
 print hidden,obs# initial guess of parameters
@@ -31,4 +34,11 @@ obsmat1 = mk_stochastic(np.random.rand(Q,O))
 # obsmat1=obsmat0
 
 # improve guess of parameters using EM
-[LL, prior2, transmat2, obsmat2] = dhmm_em(obs[0],hidden[0], prior1, transmat1, obsmat1, 5000,.0001 );
+[LL, prior2, transmat2, obsmat2,nr_iter] = dhmm_em(obs[0],hidden[0], prior_1, transmat1, obsmat1, 50,.0001 );
+
+print "Prior:",prior2
+print "Transition:",transmat2
+print "Observation:",obsmat2
+import matplotlib.pyplot as plt
+plt.plot(LL)
+plt.show()

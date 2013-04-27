@@ -24,7 +24,7 @@ def compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_
     T=len(observation_vector)
     obslik = evaluate_pdf_cond_multinomial(observation_vector, emission_matrix)
     [alpha, beta, gamma, current_ll, xi_summed] = forward_backward(prior, transition_matrix, emission_matrix,observation_vector,True,obslik)
-    loglik = loglik -  current_ll
+    loglik = loglik + current_ll
     print gamma, "GAMMA"
     exp_num_trans = exp_num_trans + xi_summed
     print "EXPETCED VISISTS 1 BEFORE",exp_num_visits1

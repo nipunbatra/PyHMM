@@ -67,15 +67,15 @@ def mk_stochastic(T):
         out=np.zeros((np.shape(T)))
         number_of_rows=np.shape(T)[0]
         for row in range(0,number_of_rows):
-            print row, "ROW"
+            
             sum_row=1.0*np.sum(T[row,:])
-            print sum_row,T
+            
             a=T[row,:]
             b=a/sum_row
-            print b,b*np.ones(3)
+            
             out[row,:]=b
-            print T
-    print out
+            
+    
     return out
         
 '''      

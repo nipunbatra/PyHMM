@@ -24,7 +24,7 @@ def compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_
     T=len(observation_vector)
     obslik = evaluate_pdf_cond_multinomial(observation_vector, emission_matrix)
     [alpha, beta, gamma, current_ll, xi_summed] = forward_backward(prior, transition_matrix, emission_matrix,observation_vector,True,obslik)
-    loglik = loglik +  current_ll
+    loglik = loglik -  current_ll
     print gamma, "GAMMA"
     exp_num_trans = exp_num_trans + xi_summed
     print "EXPETCED VISISTS 1 BEFORE",exp_num_visits1
@@ -56,8 +56,8 @@ def dhmm_em(observation_vector,hidden,prior,transition_matrix,emission_matrix,ma
          #M Step
          prior = normalize(exp_num_visits1)[0]
          print "AFTER M STEP:",prior
-         transmat = mk_stochastic(exp_num_trans)[0]
-         obsmat = mk_stochastic(exp_num_emit)[0]
+         transmat = mk_stochastic(exp_num_trans)
+         obsmat = mk_stochastic(exp_num_emit)
          num_iter =  num_iter + 1
          #converged = em_converged(loglik, previous_loglik, thresh,False)
          previous_loglik = loglik

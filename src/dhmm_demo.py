@@ -19,22 +19,26 @@ print "Observation",obsmat0
 
 # training data
 T = 5
-nex = 100
+nex = 10000
 [obs,hidden] = sample_dhmm(prior0, transmat0, obsmat0, T, nex)
 
 print hidden,obs# initial guess of parameters
+raw_input('ENter to continue')
 prior1 = normalize(np.random.rand(Q,1))[0]
 prior_1=prior1.flatten(1)
 print "SENDING PRIOR",prior1,prior_1
 transmat1 = mk_stochastic(np.random.rand(Q,Q))
 obsmat1 = mk_stochastic(np.random.rand(Q,O))
 
+obs=[[0,1,2,0,1,2,0,1,2,1]]
+hidden=[[0,1,0,1,0,1,0,1,0,1]]
 # prior1=prior0;
 # transmat1=transmat0
 # obsmat1=obsmat0
 
 # improve guess of parameters using EM
 [LL, prior2, transmat2, obsmat2,nr_iter] = dhmm_em(obs[0],hidden[0], prior_1, transmat1, obsmat1, 50,.0001 );
+
 
 print "Prior:",prior2
 print "Transition:",transmat2

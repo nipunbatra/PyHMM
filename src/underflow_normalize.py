@@ -59,14 +59,24 @@ def normalize(A,dim=None):
 
 
 def mk_stochastic(T):
+    print "Dimensions:",np.ndim(T)
+    print "Shape:",np.shape(T)
     if (np.ndim(T)==2) and (T.shape[0]==1 or T.shape[1]==1): # isvector
         [T,Z] = normalise(T);
     else:
+        out=np.zeros((np.shape(T)))
         number_of_rows=np.shape(T)[0]
         for row in range(0,number_of_rows):
-            sum_row=np.sum(T[row,:])
-            T[row,:]=T[row,:]/sum_row
-    return T
+            print row, "ROW"
+            sum_row=1.0*np.sum(T[row,:])
+            print sum_row,T
+            a=T[row,:]
+            b=a/sum_row
+            print b,b*np.ones(3)
+            out[row,:]=b
+            print T
+    print out
+    return out
         
 '''      
 c=np.array([[.7,.3, .3],[.4,.6,.4]])

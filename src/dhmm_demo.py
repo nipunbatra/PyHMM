@@ -19,7 +19,7 @@ print "Observation",obsmat0
 
 # training data
 T = 1
-nex = 10
+nex = 100
 [obs,hidden] = sample_dhmm(prior0, transmat0, obsmat0, T, nex)
 
 print hidden,obs# initial guess of parameters
@@ -29,8 +29,8 @@ print "SENDING PRIOR",prior1,prior_1
 transmat1 = mk_stochastic(np.random.rand(Q,Q))
 obsmat1 = mk_stochastic(np.random.rand(Q,O))
 
-#obs=[[0,1,2,0,1,2,0,1,2,1]]
-#hidden=[[0,1,0,1,0,1,0,1,0,1]]
+obs=[[2,1,2,0,1,2,0,1,2,1]]
+hidden=[[1,1,1,1,0,1,1,1,1,1]]
 # prior1=prior0;
 # transmat1=transmat0
 # obsmat1=obsmat0    

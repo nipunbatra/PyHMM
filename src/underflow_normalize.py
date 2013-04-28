@@ -59,27 +59,44 @@ def normalize(A,dim=None):
 
 
 def mk_stochastic(T):
-    print "Dimensions:",np.ndim(T)
-    print "Shape:",np.shape(T)
-    if (np.ndim(T)==2) and (T.shape[0]==1 or T.shape[1]==1): # isvector
-        [T,Z] = normalise(T);
+    '''
+    mk_stochastic: Ensure that the argument is a stochastic matrix, sum over last dimension is 1
+    Inputs
+    ------
+    A: Array of type floating point
+   
+    Outputs
+    -------
+    M: Normalized Array
+        
+    Examples
+    --------
+    
+    Example 1: Making a vector stochastic 
+    normalized_array=mk_stochastic(np.array([1,2,3]))
+    
+    Output
+    
+    normalized_array= array([ 0.16666667,  0.33333333,  0.5])
+    
+    Example 2: Making a 2d matrix stochastic 
+    [normalized_array, normalizing_constant]=mk_stochastic(np.array([[1,2,3],[4,5,6]]))
+    
+    Output
+    normalized_array=array([[ 0.16666667,  0.33333333,  0.5       ],
+       [ 0.26666667,  0.33333333,  0.4       ]])
+
+
+    '''
+    if ((np.ndim(T)==2) and (T.shape[0]==1 or T.shape[1]==1)) or np.ndim(T)==1: # isvector
+        [out,Z] = normalize(T);
     else:
         out=np.zeros((np.shape(T)))
         number_of_rows=np.shape(T)[0]
-        for row in range(0,number_of_rows):
-            
-            sum_row=1.0*np.sum(T[row,:])
-            
+        for row in range(0,number_of_rows):            
+            sum_row=1.0*np.sum(T[row,:])           
             a=T[row,:]
-            b=a/sum_row
-            
+            b=a/sum_row            
             out[row,:]=b
-            
-    
     return out
         
-'''      
-c=np.array([[.7,.3, .3],[.4,.6,.4]])
-[M,s]=normalize(c, 2)
-print M,s
-'''

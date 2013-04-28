@@ -11,6 +11,8 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
     scale=np.ones(number_of_observations)
     xi = np.zeros((number_of_observations,number_of_hidden_states,number_of_hidden_states)) 
     gamma=np.zeros(shape_alpha)
+    gamma2=np.zeros(shape_alpha)
+
     xi_summed=np.zeros((number_of_hidden_states,number_of_hidden_states))
     
     
@@ -47,17 +49,18 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
             alpha[j][t]=prob_sum*emission_matrix[j][observation_vector[t]]
         if scaling:
             [alpha[:,t], n] = normalize(alpha[:,t])
-            scale[t] = 1/n
+            scale[t] = n
       
     '''3.Termination'''
     if scaling:
+        print scale,"SCALE"
         loglik=sum(np.log(scale))
     else:
         loglik=np.log(sum(alpha[:,number_of_observations-1]))
 
     '''Backwards'''
     beta=np.ones(shape_alpha)
-    gamma[:,number_of_observations-1] = alpha[:,number_of_observations-1] * beta[:,number_of_observations-1]
+    gamma[:,number_of_observations-1] = normalize(alpha[:,number_of_observations-1] * beta[:,number_of_observations-1])[0]
    
     '''1.Initialization'''
     '''We have already set beta as a sequence of 1's.'''
@@ -72,9 +75,9 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
             beta[i][t]=beta_sum
         if scaling:
             [beta[:,t], n] = normalize(beta[:,t])
-            scale[t] = 1/n
-        gamma[:,t] = alpha[:,t] * beta[:,t]
-    
+            scale[t] = n
+        gamma[:,t] = normalize(alpha[:,t] * beta[:,t])[0]
+        
     
     '''Computing xi'''
     
@@ -94,10 +97,19 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
             for j in range(number_of_hidden_states):
                 xi_summed[i][j]+=xi[t][i][j]
     
-    
+    for t in xrange(number_of_observations):
+        for i in xrange(number_of_hidden_states):
+            gamma2[i][t] = sum(xi[t][i])
+            
+    print "---------------------------------------------"
+    print "Gamma"
+    print gamma
+    print "---------------------------------------------"
+    print "Gamma2"
+    print gamma2
     
     '''CHECKING'''
-    print "Asserting"
+    #print "Asserting"
     for t in range(number_of_observations):
         for i in range(0,number_of_hidden_states):
             p=0.0

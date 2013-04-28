@@ -3,7 +3,7 @@ import numpy as np
 from underflow_normalize import normalize
 
 
-def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,scaling,observation_likelihood):
+def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,scaling):
     print "PRIOR OBTAINED IS:",prior
     number_of_hidden_states=len(prior)
     number_of_observations=len(observation_vector)
@@ -12,6 +12,7 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
     alpha=np.zeros(shape_alpha)
     scale=np.ones(number_of_observations)
     xi_summed = np.zeros((number_of_hidden_states,number_of_hidden_states))
+    xi=[]
     gamma=np.zeros(shape_alpha)
     
     
@@ -48,7 +49,7 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
         for j in range(0,number_of_hidden_states):
             prob_sum=0            
             for i in range(0,number_of_hidden_states):
-                prob_sum+=alpha[i][t-1]+transition_matrix[i][j]                
+                prob_sum+=alpha[i][t-1]*transition_matrix[i][j]                
             alpha[j][t]=prob_sum*emission_matrix[j][observation_vector[t]]
         if scaling:
             [alpha[:,t], n] = normalize(alpha[:,t])
@@ -92,11 +93,30 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
         gamma[:,t] = normalize(alpha[:,t] * beta[:,t])[0]
     print "BETA computed is:",beta
     print "Gamma computed is:",gamma
-   
     
+    for t in range(number_of_observations-1):
+        xi.append(np.zeros((number_of_hidden_states,number_of_hidden_states)))
+        for i in range(0,number_of_hidden_states):
+            for j in range(0,number_of_hidden_states):
+                print alpha[i][t]*transition_matrix[i][j]*emission_matrix[j][observation_vector[t+1]]*beta[j][t+1]
+                xi[t][i][j]=alpha[i][t]*transition_matrix[i][j]*emission_matrix[j][observation_vector[t+1]]*beta[j][t+1]
+    
+    xi.append(np.zeros((number_of_hidden_states,number_of_hidden_states)))  
+    for i in range(0,number_of_hidden_states):
+        for j in range(0,number_of_hidden_states):
+            xi[number_of_observations-1][i][j]=normalize(alpha[i][number_of_observations-1]*transition_matrix[i][j])[0]
+    
+    print xi
+    xi_summed2=np.zeros((number_of_hidden_states,number_of_hidden_states))
+    for t in range(number_of_observations):
+        xi_summed2+=xi[t]
+    
+    print "********************************************************************"
+    print xi_summed2
     xi_summed  = xi_summed + normalize((transition_matrix * np.dot(alpha[:,t] , b.conj().T)))[0]
-    
-    return [alpha,beta,gamma,loglik,xi_summed]
+    print "*********************************************************************"
+    print xi_summed
+    return [alpha,beta,gamma,xi,loglik]
 
     
       

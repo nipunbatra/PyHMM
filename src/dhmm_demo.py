@@ -19,7 +19,7 @@ print "Observation",obsmat0
 
 # training data
 T = 1
-nex = 100
+nex = 10
 [obs,hidden] = sample_dhmm(prior0, transmat0, obsmat0, T, nex)
 
 print hidden,obs# initial guess of parameters

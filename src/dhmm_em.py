@@ -23,7 +23,7 @@ def compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_
     #Number of observations
     T=len(observation_vector)
     obslik = evaluate_pdf_cond_multinomial(observation_vector, emission_matrix)
-    [alpha, beta, gamma, current_ll, xi_summed] = forward_backward(prior, transition_matrix, emission_matrix,observation_vector,True,obslik)
+    [alpha, beta, gamma, current_ll, xi_summed] = forward_backward(prior, transition_matrix, emission_matrix,observation_vector,True)
     loglik = loglik + current_ll
     print gamma, "GAMMA"
     exp_num_trans = exp_num_trans + xi_summed
@@ -59,7 +59,7 @@ def dhmm_em(observation_vector,hidden,prior,transition_matrix,emission_matrix,ma
          transmat = mk_stochastic(exp_num_trans)
          obsmat = mk_stochastic(exp_num_emit)
          num_iter =  num_iter + 1
-         #converged = em_converged(loglik, previous_loglik, thresh,False)
+         [converged,decrease] = em_converged(loglik, previous_loglik, thresh,False)
          previous_loglik = loglik
          LL.append(loglik)
          print "Log Likelihood:",LL

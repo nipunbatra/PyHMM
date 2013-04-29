@@ -24,15 +24,19 @@ def compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_
     T=len(observation_vector)
     obslik = evaluate_pdf_cond_multinomial(observation_vector, emission_matrix)
     #E
-    [alpha, beta, gamma, xi,xi_summed,current_ll] = forward_backward(prior, transition_matrix, emission_matrix,observation_vector,True)
+    [alpha, beta, gamma, xi,xi_summed,current_ll] = forward_backward(prior, transition_matrix, emission_matrix,observation_vector,True,obslik)
     loglik = loglik + current_ll
     print gamma, "\nGAMMA\n"
  
     exp_num_trans = exp_num_trans + xi_summed
+    
     #print "EXPETCED VISISTS 1 BEFORE",exp_num_visits1
-    exp_num_visits1 = gamma[:,0]
+    exp_num_visits1 += gamma[:,0]
     #print "EXPETCED VISISTS 1 AFTER",exp_num_visits1
     exp_num_visitsT = exp_num_visitsT + gamma[:,T-1]
+    print "Visits 1",exp_num_visits1
+    print "Visits T",exp_num_visitsT
+    print "EXP NUM TRANS",exp_num_trans
     for t in range(0,T):
         o = observation_vector[t]
         exp_num_emit[:,o] = exp_num_emit[:,o] + gamma[:,t]
@@ -40,6 +44,8 @@ def compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_
     #print "Exp Num Transitions",exp_num_trans
     #print "Exp Num Visits 1",exp_num_visits1
     #print "Exp Num Visits T",exp_num_visitsT
+    print "Exp num emit",exp_num_emit
+    raw_input()
     new_pi=normalize(gamma[:,0])[0]
     new_A=xi_summed/np.sum(gamma,1)
     (number_of_hidden_states,number_of_observation_states)=np.shape(emission_matrix)
@@ -57,10 +63,11 @@ def compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_
     
     
     print "******************************"
-    print "New Pi:",new_pi
-    print "New A:",new_A
-    print "After normalizing",mk_stochastic(new_A)
-    return [loglik, new_pi,new_A,B_new]
+    #print "New Pi:",new_pi
+    #print "New A:",new_A
+    #print "After normalizing",mk_stochastic(new_A)
+    return [loglik,exp_num_visits1,exp_num_visitsT,exp_num_trans,exp_num_emit]
+    #return [loglik, new_pi,new_A,B_new]
 
 
 def dhmm_em(observation_vector,hidden,prior,transition_matrix,emission_matrix,max_iter,thresh):
@@ -74,16 +81,22 @@ def dhmm_em(observation_vector,hidden,prior,transition_matrix,emission_matrix,ma
     while (num_iter <= max_iter) :
          
          #E step
-         [loglik, prior,A,B] = compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_matrix, 0)
+         [loglik,exp_num_visits1,exp_num_visitsT,exp_num_trans,exp_num_emit]=compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_matrix, 0)
+         #[loglik, prior,A,B] = compute_ess_dhmm(observation_vector,hidden,prior,transition_matrix,emission_matrix, 0)
          print "-----------ITERATION "+str(num_iter)+"----------"
          #M Step
-         prior = prior
+         #prior = prior
+         prior=normalize(exp_num_visits1)[0]
          #print "AFTER M STEP:",prior
-         transition_matrix = mk_stochastic(A)
-         emission_matrix = mk_stochastic(B)
+         transition_matrix = mk_stochastic(exp_num_trans)
+         
+         #emission_matrix = mk_stochastic(B)
+         emission_matrix=mk_stochastic(exp_num_emit)
          print "PRIOR:",prior
          print "Transition",transition_matrix
          print "Observation",emission_matrix
+         print loglik
+         raw_input()
          num_iter =  num_iter + 1
          [converged,decrease] = em_converged(loglik, previous_loglik, thresh,False)
          previous_loglik = loglik

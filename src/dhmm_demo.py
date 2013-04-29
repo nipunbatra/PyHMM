@@ -34,13 +34,15 @@ prior_1=prior0
 transmat1 = mk_stochastic(np.random.rand(Q,Q))
 obsmat1 = mk_stochastic(np.random.rand(Q,O))
 
-obs=[[0,1,2,0,1,2,0,1,2,1]]
-hidden=[[0,1,0,1,0,1,1,0,1,0]]
-
+obs=np.array([[ 2,2,2,1,1,0,0,1,0,1]])
+hidden=np.array([[1,0,0,1,0,1,0,1,1,0]])
+transmat1=  np.array([[0.3143, 0.6857],[0.4807, 0.5193]])
+obsmat1= np.array([[0.2535, 0.2571, 0.4893],[0.3934,0.4136,0.1930]])
+prior_1=np.array([.6109,.3891])
 print "Train initial guess parameters"
 print "-"*80
 print "Prior:",prior_1
-print "Observation",obsmat1
+print "Observation",obsmat1 
 print "Transition:",transmat1
 #transmat1=transmat0
 #obsmat1=obsmat0
@@ -49,7 +51,7 @@ print "Transition:",transmat1
 # obsmat1=obsmat0    
 
 # improve guess of parameters using EM
-[LL, prior2, transmat2, obsmat2,nr_iter] = dhmm_em(obs[0],hidden[0], prior_1, transmat1, obsmat1, 100,.0001 );
+[LL, prior2, transmat2, obsmat2,nr_iter] = dhmm_em(obs[0],hidden[0], prior_1, transmat1, obsmat1, 10,.0001 );
 
 
 print "Learnt Parameters"

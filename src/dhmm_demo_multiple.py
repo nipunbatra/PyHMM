@@ -46,7 +46,7 @@ obs=np.array([[ 2,1,0,0,2,1,0,2,2,1],[2,0,1,0,0,0,2,2,1,2],[1,2,0,0,2,2,1,0,2,2]
 ]])'''
 transmat1=  np.array([[0.3143, 0.6857],[0.4807, 0.5193]])
 obsmat1= np.array([[0.2535, 0.2571, 0.4893],[0.3934,0.4136,0.1930]])
-prior_1=np.array([.6109,.3891])
+prior_1=np.array([.30,.70])
 print "Train initial guess parameters"
 print "-"*80
 print "Prior:",prior_1
@@ -59,7 +59,7 @@ print "Transition:",transmat1
 # obsmat1=obsmat0    
 
 # improve guess of parameters using EM
-[LL, prior2, transmat2, obsmat2,nr_iter] = dhmm_em(obs, prior_1, transmat1, obsmat1, 350,.0001 );
+[LL, prior2, transmat2, obsmat2,nr_iter] = dhmm_em(obs, prior_1, transmat1, obsmat1, 3500,.0000001 );
 
 
 print "Learnt Parameters"
@@ -67,5 +67,5 @@ print "Prior:",prior2
 print "Transition:",transmat2
 print "Observation:",obsmat2
 import matplotlib.pyplot as plt
-plt.plot(LL)
-plt.show()
+#plt.plot(LL)
+#plt.show()

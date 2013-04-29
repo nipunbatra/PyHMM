@@ -42,12 +42,13 @@ def path(prior,transition_matrix,emission_matrix,observation_vector,scaling=True
     '''4.Path Backtracking'''
     for t in range(number_of_observations-2,-1,-1):
         optimum_path[t]=psi[optimum_path[t+1]][t]
+        
     '''Log Probability'''
     if scaling:
         loglik=-sum(np.log(scale))
     else:
         loglik=np.log(p_star)
-    return optimum_path,delta,loglik
+    return [optimum_path,delta,loglik]
     
   
 start_probability=np.array([.6,.4])
@@ -57,4 +58,4 @@ emission_probability=np.array([[.1,.4,.5],[.6,.3,.1]])
 observed_sequence=np.random.randint(2,size=250)
 [a,b,c]=path(start_probability,transition_probability,emission_probability,observed_sequence)
 [d,e,f]=path(start_probability,transition_probability,emission_probability,observed_sequence,scaling=False)
-print c,f
+print c,f,a

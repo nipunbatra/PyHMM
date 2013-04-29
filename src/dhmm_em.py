@@ -3,6 +3,7 @@ from evaluate_pdf_cond_multinomial import evaluate_pdf_cond_multinomial
 from forward_backward import forward_backward
 from underflow_normalize import normalize, mk_stochastic
 from em_converged import em_converged
+import matplotlib.pyplot as plt
 
 '''Compute Sufficient Statistics
 1. Prior
@@ -84,7 +85,7 @@ def dhmm_em(observation_i,prior,transition_matrix,emission_matrix,max_iter,thres
     num_iter = 1
     LL = []
     
-    while (num_iter <= max_iter) :
+    while (num_iter <= max_iter) and not converged :
          
          #E step
          [loglik,exp_num_visits1,exp_num_visitsT,exp_num_trans,exp_num_emit]=compute_ess_dhmm(observation_i,prior,transition_matrix,emission_matrix, 0)
@@ -98,15 +99,18 @@ def dhmm_em(observation_i,prior,transition_matrix,emission_matrix,max_iter,thres
          
          #emission_matrix = mk_stochastic(B)
          emission_matrix=mk_stochastic(exp_num_emit)
-         print "PRIOR:",prior
-         print "Transition",transition_matrix
-         print "Observation",emission_matrix
-         print loglik
+         
         
          num_iter =  num_iter + 1
          [converged,decrease] = em_converged(loglik, previous_loglik, thresh,False)
          previous_loglik = loglik
          LL.append(loglik)
+         plt.ion()
+         plt.clf()
+         plt.title('Prior State_1 %s State_2 %s'%(prior[0],prior[1]))
+         plt.plot(LL)
+         plt.draw()
+         
          #print "Log Likelihood:",LL
     return [LL, prior, transition_matrix, emission_matrix, num_iter]
 

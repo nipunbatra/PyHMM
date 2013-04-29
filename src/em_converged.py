@@ -4,7 +4,7 @@ def em_converged(loglik, previous_loglik, threshold, check_increased):
     converged = False
     decrease = False
     if check_increased:
-      if loglik - previous_loglik < -.0001:
+      if loglik - previous_loglik < -.000001:
           decrease = True
           converged = False
           return [converged,decrease]

@@ -90,17 +90,17 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
             [beta[:,t], n] = normalize(beta[:,t])
             scale[t] = n
         gamma[:,t] = normalize(alpha[:,t] * beta[:,t])[0]
-        print "ALPHA T",alpha[:,t],t
+       
         a=alpha[:,t].reshape(number_of_hidden_states,1)
-        print a,"A"
-        print transition_matrix
         
-        print np.dot(a, b.conj().T[np.newaxis])
+        #print transition_matrix
+        print b
+        print obslik[:,t+1],"OBSLIK"
+        #print np.dot(a, b.conj().T[np.newaxis])
         
         #print np.mat(alpha[:,t])*np.mat(b.conj().T)
         
         xi_summed  = xi_summed + normalize((transition_matrix * np.dot(a, b.conj().T[np.newaxis])))[0]
-    print xi_summed," fullly"
     
     '''Computing xi'''
     
@@ -134,9 +134,7 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
                 p+=xi[t][i][j]
             #print p/gamma[i][t]
      
-    print "Alpha",alpha
-    print "Beta",beta
-    raw_input()       
+   
             #assert(p==gamma[t][i])
     return [alpha,beta,gamma,xi,xi_summed,loglik]
 

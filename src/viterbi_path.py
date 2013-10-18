@@ -2,6 +2,8 @@ import numpy as np
 from underflow_normalize import normalize
 
 def path(prior,transition_matrix,emission_matrix,observation_vector,scaling=True):
+    print "Starting Viterbi"
+    print observation_vector.shape
     number_of_hidden_states=len(prior)
     number_of_observations=len(observation_vector)
     shape_delta=(number_of_hidden_states,number_of_observations)
@@ -14,11 +16,19 @@ def path(prior,transition_matrix,emission_matrix,observation_vector,scaling=True
     
     '''1.Initialization'''
     first_observation=observation_vector[0]
-    delta[:,0]=prior*emission_matrix[first_observation:,0]
-    psi[:,0]=0
+    # first_observation,"Frist "
+    #print prior,"Prior"
+    #print emission_matrix[first_observation:,0],"Emission"
+    #print prior*emission_matrix[first_observation][0],"Prod"
+    #print emission_matrix[5:,0],"ya"
+    #print emission_matrix[0][first_observation],emission_matrix[0][first_observation].shape
+    for i in range(number_of_hidden_states):
+        delta[i][0]=prior[i]*emission_matrix[i][first_observation]
+        psi[i,0]=0
+    #print delta
     if scaling:
         [delta[:,0], n] = normalize(delta[:,0])
-        scale[0] = 1/n;
+        scale[0] = 1/n
     
 
     '''2.Recursion'''
@@ -31,9 +41,10 @@ def path(prior,transition_matrix,emission_matrix,observation_vector,scaling=True
                 if p>delta[j][t]:
                     delta[j][t]=p  
                     psi[j][t]=i 
+        #print delta
         if scaling:
-            [delta[:,t], n] = normalize(delta[:,t]);
-            scale[t] = 1/n;
+            [delta[:,t], n] = normalize(delta[:,t])
+            scale[t] = 1/n
     
     '''3.Termination'''
     p_star=max(delta[:,number_of_observations-1])
@@ -51,6 +62,7 @@ def path(prior,transition_matrix,emission_matrix,observation_vector,scaling=True
     return [optimum_path,delta,loglik]
     
   
+'''  
 start_probability=np.array([.6,.4])
 transition_probability=np.array([[.7,.3],[.4,.6]])
 emission_probability=np.array([[.1,.4,.5],[.6,.3,.1]])
@@ -59,3 +71,4 @@ observed_sequence=np.random.randint(2,size=250)
 [a,b,c]=path(start_probability,transition_probability,emission_probability,observed_sequence)
 [d,e,f]=path(start_probability,transition_probability,emission_probability,observed_sequence,scaling=False)
 print c,f,a
+'''

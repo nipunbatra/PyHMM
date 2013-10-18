@@ -59,6 +59,7 @@ print "Transition:",transmat1
 # obsmat1=obsmat0    
 
 # improve guess of parameters using EM
+
 [LL, prior2, transmat2, obsmat2,nr_iter] = dhmm_em(obs, prior_1, transmat1, obsmat1, 3500,.0000001 );
 
 

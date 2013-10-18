@@ -32,7 +32,7 @@ Output: array([[ 0.0284 ,  0.0284 ,  0.315  ,  0.0284 ,  0.0284 ,  0.06565,
     B = np.zeros((Q,T))
 
     for t in range(0,T):
-        B[:,t] = obsmat[:, data[t]    ]
+        B[:,t] = obsmat[:, data[t]]
 
 
     return B    

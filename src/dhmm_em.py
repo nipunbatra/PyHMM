@@ -36,9 +36,9 @@ def compute_ess_dhmm(observation_vector,prior,transition_matrix,emission_matrix,
         exp_num_visits1 += gamma[:,0]
         #print "EXPETCED VISISTS 1 AFTER",exp_num_visits1
         exp_num_visitsT = exp_num_visitsT + gamma[:,T-1]
-        print "Visits 1",exp_num_visits1
-        print "Visits T",exp_num_visitsT
-        print "EXP NUM TRANS",exp_num_trans
+        #print "Visits 1",exp_num_visits1
+        #print "Visits T",exp_num_visitsT
+        #print "EXP NUM TRANS",exp_num_trans
         for t in range(0,T):
             o = observation_i[t]
             exp_num_emit[:,o] = exp_num_emit[:,o] + gamma[:,t]
@@ -46,11 +46,11 @@ def compute_ess_dhmm(observation_vector,prior,transition_matrix,emission_matrix,
         #print "Exp Num Transitions",exp_num_trans
         #print "Exp Num Visits 1",exp_num_visits1
         #print "Exp Num Visits T",exp_num_visitsT
-        print "Exp Num Emit",exp_num_emit
-        print "Xi Summed",xi_summed
-        print "Sequence",np.array(observation_i)+1
-        print "Alpha",alpha
-        print "Beta",beta
+        #print "Exp Num Emit",exp_num_emit
+        #print "Xi Summed",xi_summed
+        #print "Sequence",np.array(observation_i)+1
+        #print "Alpha",alpha
+        #print "Beta",beta
         #raw_input('After iteration%s'%i)
         
         new_pi=normalize(gamma[:,0])[0]
@@ -69,7 +69,7 @@ def compute_ess_dhmm(observation_vector,prior,transition_matrix,emission_matrix,
             
         
         
-        print "******************************"
+        #print "******************************"
         #print "New Pi:",new_pi
         #print "New A:",new_A
         #print "After normalizing",mk_stochastic(new_A)
@@ -90,7 +90,7 @@ def dhmm_em(observation_i,prior,transition_matrix,emission_matrix,max_iter,thres
          #E step
          [loglik,exp_num_visits1,exp_num_visitsT,exp_num_trans,exp_num_emit]=compute_ess_dhmm(observation_i,prior,transition_matrix,emission_matrix, 0)
          #[loglik, prior,A,B] = compute_ess_dhmm(observation_i,hidden,prior,transition_matrix,emission_matrix, 0)
-         print "-----------ITERATION "+str(num_iter)+"----------"
+         #print "-----------ITERATION "+str(num_iter)+"----------"
          #M Step
          #prior = prior
          prior=normalize(exp_num_visits1)[0]
@@ -105,11 +105,7 @@ def dhmm_em(observation_i,prior,transition_matrix,emission_matrix,max_iter,thres
          [converged,decrease] = em_converged(loglik, previous_loglik, thresh,False)
          previous_loglik = loglik
          LL.append(loglik)
-         plt.ion()
-         plt.clf()
-         plt.title('Prior State_1 %s State_2 %s'%(prior[0],prior[1]))
-         plt.plot(LL)
-         plt.draw()
+         
          
          #print "Log Likelihood:",LL
     return [LL, prior, transition_matrix, emission_matrix, num_iter]

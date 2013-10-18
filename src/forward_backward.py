@@ -36,9 +36,9 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
     for i in range(0,number_of_hidden_states):
         alpha[i][0]=prior[i]*emission_matrix[i][observation_vector[0]]
     
-    print "Prior_i",prior[i]
-    print "Obs",observation_vector[0]
-    print emission_matrix[i][observation_vector[0]]
+    #print "Prior_i",prior[i]
+    #print "Obs",observation_vector[0]
+    #print emission_matrix[i][observation_vector[0]]
     
           
     if scaling:
@@ -62,7 +62,7 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
       
     '''3.Termination'''
     if scaling:
-        print scale,"SCALE"
+        #print scale,"SCALE"
         loglik=sum(np.log(scale))
     else:
         loglik=np.log(sum(alpha[:,number_of_observations-1]))
@@ -94,8 +94,8 @@ def forward_backward(prior,transition_matrix,emission_matrix,observation_vector,
         a=alpha[:,t].reshape(number_of_hidden_states,1)
         
         #print transition_matrix
-        print b
-        print obslik[:,t+1],"OBSLIK"
+        #print b
+        #print obslik[:,t+1],"OBSLIK"
         #print np.dot(a, b.conj().T[np.newaxis])
         
         #print np.mat(alpha[:,t])*np.mat(b.conj().T)
